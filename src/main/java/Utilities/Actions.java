@@ -1,21 +1,22 @@
 package Utilities;
 
+import com.company.utils.ConnectDB;
+
+import java.io.BufferedReader;
 import java.io.IOException;
-import java.sql.*;
+import java.io.InputStreamReader;
+import java.nio.Buffer;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 
 public final class Actions {
-    private static Actions instance;
-
-    private Actions(){}
-
-    public static Actions getInstance() throws SQLException {
-        if(instance == null) {
-            instance = new Actions();
-        }
-        return instance;
+    private Actions() {
     }
-    public static void setConnection(){
 
+    public static void main(String[] args) {
+        // Comprovem si el driver del connector de jdbc està importat dins del projecte (jdbc.jar)
         try {
             Class.forName("com.mysql.jdbc.Driver");
         } catch (ClassNotFoundException e) {
@@ -24,11 +25,15 @@ public final class Actions {
 
         boolean timeToQuit = false;
         /*
-         * try-catch with resources: Connection
+         * try-catch with resources: BufferedReader i Connection
          */
-        try (Connection con = ConnectionDB.getInstance()) {
+        try (BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
+             Connection con = ConnectDB.getInstance()) {
+
+            createTable(con);
+
             do {
-                timeToQuit = executeMenu(con);
+                timeToQuit = executeMenu(con, in);
             } while (!timeToQuit);
 
         } catch (IOException e) {
@@ -39,54 +44,69 @@ public final class Actions {
             System.out.println("Message: " + e.getMessage());
         } finally {
             try {
-                ConnectionDB.closeConnection();
+                ConnectDB.closeConnection();
             } catch (SQLException e) {
                 System.out.println("Error closing resource " + e.getClass().getName());
             }
         }
-
     }
 
-    private static boolean executeMenu(Connection con) throws Exception {
-        Character action;
+    /**
+     * Mètode d'exemple per a crear una taula a la BD des de IntelliJ
+     *
+     * @param con
+     * @throws Exception
+     */
+    private static void createTable(Connection con) throws Exception {
+        String query = "CREATE TABLE IF NOT EXISTS `PRODUCTS` (\n" +
+                "  `cod` int(5) NOT NULL,\n" +
+                "  `name` text COLLATE latin1_spanish_ci NOT NULL\n" +
+                ") ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_spanish_ci;";
+        try (Statement stmt = con.createStatement()) {
+            stmt.executeUpdate(query);
+        } catch (SQLException ex) {
+            throw new Exception("Error on table PRODUCT creation:" + ex.getMessage(), ex);
+        }
+    }
+
+    /**
+     * Mètode per a mostrar el menú de l'aplicació que permet fer diverses accions a l'usuari de la app
+     *
+     * @param con
+     * @param in
+     * @return boolean
+     * @throws IOException
+     * @throws Exception
+     */
+    public static boolean executeMenu(Connection con, BufferedReader in) throws IOException, Exception {
+        String action;
         int id;
 
-        action = Utilities.leerChar("\n\n [L]ist | [C]ount | [I]nsert | [U]pdate | [Q]uit: ");
-        action = Character.toUpperCase(action);
-        if (action == 'Q') {
+        System.out.println("\n\n [L]ist | [C]ount | [I]nsert | [Q]uit: ");
+        action = in.readLine();
+        if ((action.length() == 0) || action.toUpperCase().charAt(0) == 'Q') {
             return true;
         }
 
-        switch (action) {
-            // Mostrar els detalls de totes les pelis
+        switch (action.toUpperCase().charAt(0)) {
+            // Display a list (Read the records) of CLIENTE
             case 'L': {
-                // Construïm la query i la guardem en un String
-                String query = "SELECT film_id, title, description FROM sakila.film";
-
-                // try-catch with resources: Statement i ResultSet
+                String query = "SELECT * FROM PRODUCTS";
                 try (
-                        // Creem un java.sql.Statement executable (Similar al PREPARE STATEMENT FROM stmt)
                         Statement stmt = con.createStatement();
-                        // La classe java.sql.ResultSet ens serveix per a guardar el resultat de l'execució de la sintaxi
                         ResultSet rs = stmt.executeQuery(query)) {
-
-                    // Per a cada fila guardada dins del ResultSet, agafem les columnes que vulguem per a printar-les
                     while (rs.next()) {
-                        System.out.println(rs.getString("film_id")
-                                + "   " + rs.getString("title")
-                                + "   " + rs.getString("description")
-                        );
+                        System.out.println(rs.getString("cod")
+                                + "   " + rs.getString("name"));
                     }
                 } catch (SQLException ex) {
-                    throw new Exception("Error reading records table FILMS", ex);
+                    throw new Exception("Error reading records table PRODUCTS", ex);
                 }
                 break;
             }
 
             case 'C': {
-                // TODO: Fer codi que mostri el recompte de pelis de la BD
-                System.out.print("Numero de Peliculas: ");
-                String query = "SELECT COUNT(film_id) FROM sakila.film";
+                String query = "SELECT COUNT(COD) FROM PRODUCTS";
                 try (
                         Statement stmt = con.createStatement();
                         ResultSet rs = stmt.executeQuery(query)) {
@@ -99,58 +119,8 @@ public final class Actions {
                 break;
             }
 
-            case 'I': {
-                // TODO: Fer codi que permeti inserir noves pelis
-/*                String title = Utilities.llegirParaula("Cual es el titulo?");
-                String description = Utilities.llegirFrase("Cual es la descripcion de la pelicula");
-                int languageId = Utilities.llegirInt("Cual es el Language ID?",1, 7);
-                String query = "INSERT INTO sakila.film (title, description, language_id) VALUES ( '"+title+"', '"+description+"', "+languageId+") > ?";
-                try (
-                        Statement stmt = con.createStatement()) {
-                        stmt.executeUpdate(query);
-                } catch (SQLException ex) {
-                    throw new Exception("Error reading records on table PRODUCTS:" + ex.getMessage(), ex);
-                }
-                break;*/
-                String title = Utilities.leerString("Cual es el titulo?");
-                String description = Utilities.leerString("Cual es la descripcion de la pelicula");
-                int languageId = Utilities.leerIntLimites("Cual es el Language ID?",1, 7);
-                PreparedStatement pStmt = null;
-                String query = "INSERT INTO sakila.film (title, description, language_id) VALUES ( ?, ? , ?) ";
-                try {
-                    pStmt = con.prepareStatement(query);
-                    pStmt.setString(1, title);
-                    pStmt.setString(2, description);
-                    pStmt.setInt(3, languageId);
-                    pStmt.executeUpdate();
-                } catch (SQLException ex) {
-                    throw new Exception("Error reading records on table PRODUCTS:" + ex.getMessage(), ex);
-                }
-                break;
-
-            }
-
-            case 'U': {
-                int filmId = Utilities.leerIntLimites("Cual es el Film ID de la pelicula que quieres cambiar?",1, 1000000);
-                String title = Utilities.leerString("Por qué titulo quieres cambiarlo?");
-                String description = Utilities.leerString("Por qué descripcion quieres cambiarlo?");
-                int languageId = Utilities.leerIntLimites("Por qué language ID quieres cambiarlo?",1, 7);
-                PreparedStatement pStmt = null;
-                String query = "UPDATE sakila.film SET title = ?, description = ?, language_id = ? WHERE film_id = ?";
-                try {
-                    pStmt = con.prepareStatement(query);
-                    pStmt.setString(1, title);
-                    pStmt.setString(2, description);
-                    pStmt.setInt(3, languageId);
-                    pStmt.setInt(4, filmId);
-                    pStmt.executeUpdate();
-                } catch (SQLException ex) {
-                    throw new Exception("Error reading records on table PRODUCTS:" + ex.getMessage(), ex);
-                }
-                break;
-            }
         }
+
         return false;
     }
-
 }
