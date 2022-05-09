@@ -1,16 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.Insets?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.canvas.*?>
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
 
-<?import javafx.scene.control.Button?>
-<VBox alignment="CENTER" spacing="20.0" xmlns:fx="http://javafx.com/fxml"
-      fx:controller="com.example.practicauf6.HelloController">
-    <padding>
-        <Insets bottom="20.0" left="20.0" right="20.0" top="20.0"/>
-    </padding>
 
-    <Label fx:id="welcomeText"/>
-    <Button text="Hello!" onAction="#onHelloButtonClick"/>
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.practicauf6.HelloController">
+    <children>
+        <Pane prefHeight="603.0" prefWidth="800.0">
+            <children>
+                <ImageView fx:id="database_image" fitHeight="104.0" fitWidth="131.0" layoutX="32.0" layoutY="98.0" pickOnBounds="true" preserveRatio="true" />
+                <ImageView fx:id="salle_image" fitHeight="104.0" fitWidth="131.0" layoutX="806.0" layoutY="96.0" pickOnBounds="true" preserveRatio="true" />
+                <ComboBox fx:id="datab" layoutX="199.0" layoutY="133.0" prefWidth="150.0" />
+                <TextArea layoutX="54.0" layoutY="299.0" prefHeight="260.0" prefWidth="879.0" />
+                <ComboBox layoutX="424.0" layoutY="131.0" prefWidth="150.0" />
+                <Button fx:id="connect" layoutX="669.0" layoutY="130.0" mnemonicParsing="false" text="Button" onAction="#onHelloButtonClick" />
+            </children>
+        </Pane>
+    </children>
 </VBox>
