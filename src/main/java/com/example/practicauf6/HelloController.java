@@ -13,7 +13,7 @@ public class HelloController {
     @FXML
     private Label welcomeText;
     @FXML
-    private Button connect;
+    private Button showData;
     @FXML
 
     private ComboBox comboSchema = new ComboBox();
@@ -22,15 +22,12 @@ public class HelloController {
 
     @FXML
     protected void initialize(){
-        for(String s : Actions.databases){
-            System.out.println(s);
-            comboSchema.getItems().add(s);
+
+        try {
+            setComboSchemas();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-//        System.out.println(schemas.getValue());
-    }
-    @FXML
-    protected void onHelloButtonClick() {
-        connect.setDisable(true);
     }
     @FXML
     private void comboAction(ActionEvent event) {
@@ -38,33 +35,38 @@ public class HelloController {
         System.out.println(comboSchema.getValue());
 
     }
-/*    protected void setComboSchemas() throws Exception {
-        for(String s : Actions.databases){
-            System.out.println(s);
-            schemas.getItems().add(s);
-        }
-    }*/
-    @FXML
-    protected void schemaSelected() {
-        if(comboSchema.getValue() != null) {
-            System.out.println(comboSchema.getValue());
-            comboTables.setDisable(false);
-            Actions.setTables(comboSchema.getValue());
-            System.out.println(Actions.tables.size());
-            for(String s : Actions.tables){
-                System.out.println(s);
-                System.out.println(comboSchema.getValue());
-                comboTables.getItems().add(s);
-            }
-            System.out.println(comboSchema.getValue());
-
-        }
-    }
-    protected void setComboTables() throws Exception {
+    protected void setComboSchemas() throws Exception {
         for(String s : Actions.databases){
             System.out.println(s);
             comboSchema.getItems().add(s);
         }
+    }
+    @FXML
+    protected void schemaSelected() {
+        if(comboSchema.getValue() != null) {
+            comboTables.setDisable(false);
+            Actions.setTables(comboSchema.getValue());
+            try {
+                setComboTables();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+        }
+    }
+    @FXML
+    protected void tableSelected(){
+        if(comboTables.getValue() != null){
+            System.out.println("HOLA");
+            showData.setDisable(false);
+        }
+    }
+
+    protected void setComboTables() throws Exception {
+        for(String s : Actions.tables){
+            comboTables.getItems().add(s);
+        }
+        tableSelected();
     }
 
 }

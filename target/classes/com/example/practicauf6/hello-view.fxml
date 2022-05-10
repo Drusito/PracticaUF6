@@ -23,8 +23,8 @@
                 
                 <ComboBox fx:id="comboSchema" onAction="#schemaSelected" layoutX="194.0" layoutY="98.0" prefWidth="150.0" promptText="Escull la DB" />
                 <TextArea layoutX="61.0" layoutY="215.0" prefHeight="260.0" prefWidth="879.0" />
-                <ComboBox fx:id="comboTables" disable="true" layoutX="405.0" layoutY="98.0" prefWidth="150.0" promptText="Escull la taula" />
-                <Button fx:id="connect" disable="true" layoutX="611.0" layoutY="98.0" mnemonicParsing="false" onAction="#onHelloButtonClick" text="Mostrar dades" />
+                <ComboBox fx:id="comboTables" onAction="#tableSelected" disable="true" layoutX="405.0" layoutY="98.0" prefWidth="150.0" promptText="Escull la taula" />
+                <Button fx:id="showData" disable="true" layoutX="611.0" layoutY="98.0" mnemonicParsing="false" text="Mostrar dades" />
             <Label layoutX="24.0" layoutY="22.0" text="DBMS Checker" />
             <Label layoutX="54.0" layoutY="181.0" text="Aquí tens les primeres 5 files de la taula sel·leccionada:" />
             </children>
