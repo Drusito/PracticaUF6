@@ -2,12 +2,14 @@ package Utilities;
 
 import java.io.IOException;
 import java.sql.*;
+import java.util.ArrayList;
 
 public final class Actions {
+    public static ArrayList<String> databases = new ArrayList<>();
+
     private static Actions instance;
 
     private Actions(){}
-
     public static Actions getInstance() throws SQLException {
         if(instance == null) {
             instance = new Actions();
@@ -16,6 +18,9 @@ public final class Actions {
     }
     public static void setConnection(){
 
+        // Construïm la query i la guardem en un String
+//                String query = "SELECT film_id, title, description FROM sakila.film";
+        String query = "SELECT DISTINCT TABLE_SCHEMA FROM TABLES";
         try {
             Class.forName("com.mysql.jdbc.Driver");
         } catch (ClassNotFoundException e) {
@@ -26,25 +31,33 @@ public final class Actions {
         /*
          * try-catch with resources: Connection
          */
-        try (Connection con = ConnectDB.getInstance()) {
-            /*
-            do {
-                timeToQuit = executeMenu(con);
-            } while (!timeToQuit);
-*/
-        } catch (Exception e) {
-            System.out.println("Error closing resource " + e.getClass().getName());
-            System.out.println("Message: " + e.getMessage());
-        } finally {
-            /*
+        try (Connection con = ConnectDB.getInstance();
+             Statement stmt = con.createStatement();
+            //  La classe java.sql.ResultSet ens serveix per a guardar el resultat de l'execució de la sintaxi
+             ResultSet rs = stmt.executeQuery(query))
+        {
+
+            // Per a cada fila guardada dins del ResultSet, agafem les columnes que vulguem per a printar-les
+            while (rs.next()) {
+                databases.add(rs.getString("TABLE_SCHEMA"));
+
+            }
+            for (int i = 0; i < databases.size(); i++) {
+                System.out.println(databases.get(i));
+            }
+        } catch (SQLException ex) {
             try {
-                ConnectionDB.closeConnection();
-            } catch (SQLException e) {
-                System.out.println("Error closing resource " + e.getClass().getName());
-            }*/
+                throw new Exception("Error reading records table FILMS", ex);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
     }
 
+/*    public ArrayList<String> loadSchemas() throws Exception {
+        return databases;
+    }*/
+/*
     private static boolean executeMenu(Connection con) throws Exception {
         Character action;
         int id;
@@ -109,7 +122,7 @@ public final class Actions {
                 } catch (SQLException ex) {
                     throw new Exception("Error reading records on table PRODUCTS:" + ex.getMessage(), ex);
                 }
-                break;*/
+                break;
                 String title = Utilities.leerString("Cual es el titulo?");
                 String description = Utilities.leerString("Cual es la descripcion de la pelicula");
                 int languageId = Utilities.leerIntLimites("Cual es el Language ID?",1, 7);
@@ -150,5 +163,6 @@ public final class Actions {
         }
         return false;
     }
+    */
 
 }
