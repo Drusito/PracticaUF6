@@ -21,6 +21,8 @@ public class HelloController {
     private Button connect;
     @FXML
     private ComboBox schemas = new ComboBox();
+    @FXML
+    private ComboBox tables = new ComboBox();
 
     @FXML
     protected void initialize(){
@@ -28,6 +30,7 @@ public class HelloController {
             System.out.println(s);
             schemas.getItems().add(s);
         }
+//        System.out.println(schemas.getValue());
     }
     @FXML
     protected void onHelloButtonClick() {
@@ -43,6 +46,12 @@ public class HelloController {
         for(String s : Actions.databases){
             System.out.println(s);
             schemas.getItems().add(s);
+        }
+    }
+    @FXML
+    protected void schemaSelected() {
+        if(schemas.getValue() != null) {
+            tables.setDisable(false);
         }
     }
 }
