@@ -23,7 +23,7 @@ public final class Actions {
     }
     public static void setConnection(){
         Connection con = null;
-                // Construïm la query i la guardem en un String
+        // Construïm la query i la guardem en un String
 //                String query = "SELECT film_id, title, description FROM sakila.film";
         try {
             Class.forName("com.mysql.jdbc.Driver");
@@ -79,10 +79,10 @@ public final class Actions {
         }
     }
 
-    public static void setTables (Object table)
+    public static void setTables (Object schema)
     {
         Connection con = null;
-        String query = "SELECT * FROM " + table;
+        String query = "SELECT DISTINCT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = '"+schema+"'";
         try {
             Class.forName("com.mysql.jdbc.Driver");
         } catch (ClassNotFoundException e) {
@@ -95,8 +95,8 @@ public final class Actions {
             //  La classe java.sql.ResultSet ens serveix per a guardar el resultat de l'execució de la sintaxi
             ResultSet rs = stmt.executeQuery(query);
             while (rs.next()) {
-            tables.add(rs.getString("TABLE_NAME"));
-        }
+                tables.add(rs.getString("TABLE_NAME"));
+            }
             for (int i = 0; i < tables.size(); i++) {
                 System.out.println(tables.get(i));
             }
