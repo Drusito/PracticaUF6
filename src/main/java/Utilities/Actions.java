@@ -22,29 +22,27 @@ public final class Actions {
             e.printStackTrace();
         }
 
-        boolean timeToQuit = false;
+        //boolean timeToQuit = false;
         /*
          * try-catch with resources: Connection
          */
         try (Connection con = ConnectionDB.getInstance()) {
+            /*
             do {
                 timeToQuit = executeMenu(con);
             } while (!timeToQuit);
-
-        } catch (IOException e) {
-            System.out.println("Error " + e.getClass().getName() + " , quiting.");
-            System.out.println("Message: " + e.getMessage());
+*/
         } catch (Exception e) {
             System.out.println("Error closing resource " + e.getClass().getName());
             System.out.println("Message: " + e.getMessage());
         } finally {
+            /*
             try {
                 ConnectionDB.closeConnection();
             } catch (SQLException e) {
                 System.out.println("Error closing resource " + e.getClass().getName());
-            }
+            }*/
         }
-
     }
 
     private static boolean executeMenu(Connection con) throws Exception {
