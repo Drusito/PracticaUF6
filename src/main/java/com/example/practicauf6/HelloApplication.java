@@ -1,15 +1,11 @@
 package com.example.practicauf6;
 
-import Utilities.Utilities;
-import Utilities.ConnectionDB;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
 import java.io.IOException;
-import Utilities.Actions;
-import java.sql.*;
 
 public class HelloApplication extends Application {
     @Override
