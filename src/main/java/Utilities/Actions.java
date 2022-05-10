@@ -26,7 +26,7 @@ public final class Actions {
         /*
          * try-catch with resources: Connection
          */
-        try (Connection con = ConnectionDB.getInstance()) {
+        try (Connection con = ConnectDB.getInstance()) {
             /*
             do {
                 timeToQuit = executeMenu(con);
