@@ -20,10 +20,10 @@
                   <Image url="@../../../images/logo_salle_gracia_main.png" />
                </image></ImageView>
                 
-                <ComboBox fx:id="datab" layoutX="194.0" layoutY="98.0" prefWidth="150.0" promptText="Escull la DB" />
+                <ComboBox fx:id="schemas" onAction="#schemaSelected" layoutX="194.0" layoutY="98.0" prefWidth="150.0" promptText="Escull la DB" />
                 <TextArea layoutX="61.0" layoutY="215.0" prefHeight="260.0" prefWidth="879.0" />
-                <ComboBox layoutX="405.0" layoutY="98.0" prefWidth="150.0" promptText="Escull la taula" />
-                <Button fx:id="connect" layoutX="611.0" layoutY="98.0" mnemonicParsing="false" onAction="#onHelloButtonClick" text="Mostrar dades" />
+                <ComboBox fx:id="tables" disable="true" layoutX="405.0" layoutY="98.0" prefWidth="150.0" promptText="Escull la taula" />
+                <Button fx:id="connect" disable="true" layoutX="611.0" layoutY="98.0" mnemonicParsing="false" onAction="#onHelloButtonClick" text="Mostrar dades" />
             <Label layoutX="24.0" layoutY="22.0" text="DBMS Checker" />
             <Label layoutX="54.0" layoutY="181.0" text="Aquí tens les primeres 5 files de la taula sel·leccionada:" />
             </children>
