@@ -20,7 +20,6 @@ public class HelloController {
     private ComboBox comboSchema = new ComboBox();
     @FXML
     private ComboBox comboTables = new ComboBox();
-// a
     @FXML
     protected void initialize(){
         for(String s : Actions.databases){
