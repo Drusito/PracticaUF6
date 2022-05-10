@@ -1,6 +1,7 @@
 package com.example.practicauf6;
 
 import Utilities.Actions;
+import Utilities.MySQLConnectionSettings;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -29,15 +30,8 @@ public class HelloController {
             e.printStackTrace();
         }
     }
-    @FXML
-    private void comboAction(ActionEvent event) {
-
-        System.out.println(comboSchema.getValue());
-
-    }
     protected void setComboSchemas() throws Exception {
         for(String s : Actions.databases){
-            System.out.println(s);
             comboSchema.getItems().add(s);
         }
     }
@@ -57,8 +51,8 @@ public class HelloController {
     @FXML
     protected void tableSelected(){
         if(comboTables.getValue() != null){
-            System.out.println("HOLA");
             showData.setDisable(false);
+            MySQLConnectionSettings.database = comboSchema.getValue().toString();
         }
     }
 

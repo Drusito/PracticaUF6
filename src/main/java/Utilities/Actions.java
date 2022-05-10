@@ -48,9 +48,9 @@ public final class Actions {
                     databases.add(rs.getString("TABLE_SCHEMA"));
 
                 }
-                for (int i = 0; i < databases.size(); i++) {
+/*                for (int i = 0; i < databases.size(); i++) {
                     System.out.println(databases.get(i));
-                }
+                }//shows all tables inside */
 
                 // Per a cada fila guardada dins del ResultSet, agafem les columnes que vulguem per a printar-les
 
@@ -97,6 +97,44 @@ public final class Actions {
             while (rs.next()) {
             tables.add(rs.getString("TABLE_NAME"));
         }
+            for (int i = 0; i < tables.size(); i++) {
+                System.out.println(tables.get(i));
+            }
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+
+        } catch (Exception e){
+            e.printStackTrace();
+        } finally {
+            if(con != null){
+                try {
+                    con.close();
+                    ConnectDB.setNull();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+
+    public static void showData (Object table, Object schema)
+    {
+        Connection con = null;
+        String query = "SELECT DISTINCT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = '"+schema+"'";
+        try {
+            Class.forName("com.mysql.jdbc.Driver");
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+        try
+        {
+            con = ConnectDB.getInstance();
+            Statement stmt = con.createStatement();
+            //  La classe java.sql.ResultSet ens serveix per a guardar el resultat de l'execució de la sintaxi
+            ResultSet rs = stmt.executeQuery(query);
+            while (rs.next()) {
+                tables.add(rs.getString("TABLE_NAME"));
+            }
             for (int i = 0; i < tables.size(); i++) {
                 System.out.println(tables.get(i));
             }
