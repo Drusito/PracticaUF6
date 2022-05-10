@@ -1,6 +1,7 @@
 package com.example.practicauf6;
 
 import Utilities.Actions;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
@@ -14,12 +15,56 @@ public class HelloController {
     @FXML
     private Button connect;
     @FXML
-    private ComboBox databaseNames;
+
+    private ComboBox comboSchema = new ComboBox();
+    @FXML
+    private ComboBox comboTables = new ComboBox();
 
     @FXML
-    protected void onHelloButtonClick() throws Exception {
-        Actions.
-//        databaseNames.getItems().addAll(Actions.list(Actions.staticCon));
+    protected void initialize(){
+        for(String s : Actions.databases){
+            System.out.println(s);
+            comboSchema.getItems().add(s);
+        }
+//        System.out.println(schemas.getValue());
+    }
+    @FXML
+    protected void onHelloButtonClick() {
+        connect.setDisable(true);
+    }
+    @FXML
+    private void comboAction(ActionEvent event) {
+
+        System.out.println(comboSchema.getValue());
 
     }
+/*    protected void setComboSchemas() throws Exception {
+        for(String s : Actions.databases){
+            System.out.println(s);
+            schemas.getItems().add(s);
+        }
+    }*/
+    @FXML
+    protected void schemaSelected() {
+        if(comboSchema.getValue() != null) {
+            System.out.println(comboSchema.getValue());
+            comboTables.setDisable(false);
+            Actions.setTables(comboSchema.getValue());
+            System.out.println(Actions.tables.size());
+            for(String s : Actions.tables){
+                System.out.println(s);
+                System.out.println(comboSchema.getValue());
+                comboTables.getItems().add(s);
+            }
+            System.out.println(comboSchema.getValue());
+
+        }
+    }
+    protected void setComboTables() throws Exception {
+        for(String s : Actions.databases){
+            System.out.println(s);
+            comboSchema.getItems().add(s);
+        }
+    }
+
 }

@@ -6,17 +6,27 @@
 <?import java.lang.*?>
 <?import javafx.scene.layout.*?>
 
-
-<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.practicauf6.HelloController">
+<VBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="500.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.practicauf6.HelloController">
     <children>
-        <Pane prefHeight="603.0" prefWidth="800.0">
+        <Pane prefHeight="500.0" prefWidth="1000.0" style="-fx-background-color: #B0E0E6;">
             <children>
-                <ImageView fx:id="databaseImage" fitHeight="104.0" fitWidth="131.0" layoutX="32.0" layoutY="98.0" pickOnBounds="true" preserveRatio="true" />
-                <ImageView fx:id="salleImage" fitHeight="104.0" fitWidth="131.0" layoutX="806.0" layoutY="96.0" pickOnBounds="true" preserveRatio="true" />
-                <ComboBox fx:id="databaseNames" layoutX="199.0" layoutY="133.0" prefWidth="150.0" />
-                <TextArea layoutX="54.0" layoutY="299.0" prefHeight="260.0" prefWidth="879.0" />
-                <ComboBox layoutX="424.0" layoutY="131.0" prefWidth="150.0" />
-                <Button fx:id="connect" layoutX="669.0" layoutY="130.0" mnemonicParsing="false" text="Button" onMouseClicked="#onHelloButtonClick" />
+
+                <ImageView fx:id="database_image" fitHeight="81.0" fitWidth="90.0" layoutX="32.0" layoutY="58.0" pickOnBounds="true" preserveRatio="true">
+                    <image>
+                        <Image url="@../../../images/database_icon.png" />
+                    </image>
+                </ImageView>
+                <ImageView fx:id="salle_image" fitHeight="121.0" fitWidth="195.0" layoutX="769.0" layoutY="53.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../../../images/logo_salle_gracia_main.png" />
+               </image></ImageView>
+                
+                <ComboBox fx:id="comboSchema" onAction="#schemaSelected" layoutX="194.0" layoutY="98.0" prefWidth="150.0" promptText="Escull la DB" />
+                <TextArea layoutX="61.0" layoutY="215.0" prefHeight="260.0" prefWidth="879.0" />
+                <ComboBox fx:id="comboTables" disable="true" layoutX="405.0" layoutY="98.0" prefWidth="150.0" promptText="Escull la taula" />
+                <Button fx:id="connect" disable="true" layoutX="611.0" layoutY="98.0" mnemonicParsing="false" onAction="#onHelloButtonClick" text="Mostrar dades" />
+            <Label layoutX="24.0" layoutY="22.0" text="DBMS Checker" />
+            <Label layoutX="54.0" layoutY="181.0" text="Aquí tens les primeres 5 files de la taula sel·leccionada:" />
             </children>
         </Pane>
     </children>

@@ -1,4 +1,5 @@
-package com.company.utils;
+
+package Utilities;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -30,16 +31,22 @@ public final class ConnectDB {
      */
     public static Connection getInstance() throws SQLException {
         if (instance == null) {
+
+            System.out.println("Esta cerrao");
             // Usem el mètode getConnection(url, user, passsword) de la classe jdbc.jar.DriverManager
-            instance = DriverManager.getConnection(com.company.utils.MySQLConnectionSettings.URL
-                            + com.company.utils.MySQLConnectionSettings.database
-                            + "?characterEncoding="
-                            + com.company.utils.MySQLConnectionSettings.CHARACTER_SET
-                    , com.company.utils.MySQLConnectionSettings.USERNAME
-                    , com.company.utils.MySQLConnectionSettings.PASSWORD);
+            instance = DriverManager.getConnection(MySQLConnectionSettings.URL
+                                                        + MySQLConnectionSettings.database
+                                                        + "?characterEncoding="
+                                                        + MySQLConnectionSettings.CHARACTER_SET
+                                                    , MySQLConnectionSettings.USERNAME
+                                                    , MySQLConnectionSettings.PASSWORD);
             System.out.println("Open Database");
         }
         return instance;
+    }
+
+    public static void setNull(){
+        if(instance!= null) instance=null;
     }
 
     /**

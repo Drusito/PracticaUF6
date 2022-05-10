@@ -1,21 +1,19 @@
 package com.example.practicauf6;
 
-import Utilities.Utilities;
-import Utilities.ConnectionDB;
+import Utilities.Actions;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
 import java.io.IOException;
-import Utilities.Actions;
-import java.sql.*;
 
 public class HelloApplication extends Application {
     @Override
     public void start(Stage stage) throws IOException {
+        Actions.setConnection();
         FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("hello-view.fxml"));
-        Scene scene = new Scene(fxmlLoader.load(), 1000, 600);
+        Scene scene = new Scene(fxmlLoader.load(), 1000, 500);
         stage.setTitle("Hello!");
         stage.setScene(scene);
         stage.show();
