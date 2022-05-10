@@ -5,6 +5,7 @@ import Utilities.ConnectDB;
 import java.io.BufferedReader;
 import java.io.IOException;
 
+import java.nio.charset.MalformedInputException;
 import java.sql.*;
 import java.util.ArrayList;
 
@@ -117,28 +118,77 @@ public final class Actions {
         }
     }
 
-    public static void showData (Object table, Object schema)
+    public static void showData (Object table)
     {
         Connection con = null;
-        String query = "SELECT DISTINCT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = '"+schema+"'";
+        String query = "SELECT * FROM "+table;
         try {
             Class.forName("com.mysql.jdbc.Driver");
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }
+        ResultSetMetaData rsmd = null;
         try
         {
+
             con = ConnectDB.getInstance();
             Statement stmt = con.createStatement();
             //  La classe java.sql.ResultSet ens serveix per a guardar el resultat de l'execució de la sintaxi
             ResultSet rs = stmt.executeQuery(query);
-            while (rs.next()) {
+            rsmd = rs.getMetaData();
+            while(rs.next()) {
+                for (int i = 1; i <= rsmd.getColumnCount(); i++) {
+/*                    System.out.println(i);
+                    System.out.println(rsmd.getColumnName(i));*/
+                        final String columnClass = rsmd.getColumnClassName(i);
+                        final String columnName = rsmd.getColumnName(i);
+                        final String string = "java.lang.String";
+                        final String bigInt = "java.lang.Long";
+                        final String timeStamp = "java.lang.Timestamp";
+//                    System.out.println(columnName);
+                    if(rs.getObject(i)!=null) {
+                        System.out.print(rsmd.getColumnName(i) + ": " + rs.getObject(columnName).toString() + " ");
+                    }
+                    }
+/*                switch (rsmd.getColumnType(i)) {
+                    case 16:
+                        System.out.println(rs.getBoolean(columnName));
+                    case -6:
+                        System.out.println(rs.getInt(columnName));
+                    case -5:
+                        System.out.println(rs.getLong(columnName));
+                    case 12:
+                        System.out.println(rs.getString(columnName));
+                    case 3:
+                        System.out.println(rs.getBigDecimal(columnName));
+                    case 4:
+                        System.out.println(rs.getInt(columnName));
+                    case 5:
+                        System.out.println(rs.getInt(columnName));
+                    case 8:
+                        System.out.println(rs.getDouble(columnName));
+                    case 7:
+                        System.out.println(rs.getFloat(columnName));
+                    case 93:
+                        System.out.println(rs.getTimestamp(columnName));
+                    default:
+                        System.out.println(rs.getObject(columnName));
+                }*/
+                System.out.println();
+            }
+
+/*            while (rs.next()) {
                 tables.add(rs.getString("TABLE_NAME"));
             }
             for (int i = 0; i < tables.size(); i++) {
                 System.out.println(tables.get(i));
-            }
+            }*/
         } catch (SQLException throwables) {
+            try {
+                System.out.println(rsmd.getColumnType(1));
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
             throwables.printStackTrace();
 
         } catch (Exception e){
@@ -154,112 +204,5 @@ public final class Actions {
             }
         }
     }
-
-/*    public ArrayList<String> loadSchemas() throws Exception {
-        return databases;
-    }*/
-/*
-    private static boolean executeMenu(Connection con) throws Exception {
-        Character action;
->>>>>>> master
-        int id;
-
-        System.out.println("\n\n [L]ist | [C]ount | [I]nsert | [Q]uit: ");
-        action = in.readLine();
-        if ((action.length() == 0) || action.toUpperCase().charAt(0) == 'Q') {
-            return true;
-        }
-
-        switch (action.toUpperCase().charAt(0)) {
-            // Display a list (Read the records) of CLIENTE
-            case 'L': {
-                String query = "SELECT * FROM PRODUCTS";
-                try (
-                        Statement stmt = con.createStatement();
-                        ResultSet rs = stmt.executeQuery(query)) {
-                    while (rs.next()) {
-                        System.out.println(rs.getString("cod")
-                                + "   " + rs.getString("name"));
-                    }
-                } catch (SQLException ex) {
-                    throw new Exception("Error reading records table PRODUCTS", ex);
-                }
-                break;
-            }
-
-            case 'C': {
-                String query = "SELECT COUNT(COD) FROM PRODUCTS";
-                try (
-                        Statement stmt = con.createStatement();
-                        ResultSet rs = stmt.executeQuery(query)) {
-                    if (rs.next()) {
-                        System.out.println(rs.getInt(1));
-                    }
-                } catch (SQLException ex) {
-                    throw new Exception("Error reading records table PRODUCT", ex);
-                }
-                break;
-            }
-
-<<<<<<< HEAD
-=======
-            case 'I': {
-                // TODO: Fer codi que permeti inserir noves pelis
-/*                String title = Utilities.llegirParaula("Cual es el titulo?");
-                String description = Utilities.llegirFrase("Cual es la descripcion de la pelicula");
-                int languageId = Utilities.llegirInt("Cual es el Language ID?",1, 7);
-                String query = "INSERT INTO sakila.film (title, description, language_id) VALUES ( '"+title+"', '"+description+"', "+languageId+") > ?";
-                try (
-                        Statement stmt = con.createStatement()) {
-                        stmt.executeUpdate(query);
-                } catch (SQLException ex) {
-                    throw new Exception("Error reading records on table PRODUCTS:" + ex.getMessage(), ex);
-                }
-                break;
-                String title = Utilities.leerString("Cual es el titulo?");
-                String description = Utilities.leerString("Cual es la descripcion de la pelicula");
-                int languageId = Utilities.leerIntLimites("Cual es el Language ID?",1, 7);
-                PreparedStatement pStmt = null;
-                String query = "INSERT INTO sakila.film (title, description, language_id) VALUES ( ?, ? , ?) ";
-                try {
-                    pStmt = con.prepareStatement(query);
-                    pStmt.setString(1, title);
-                    pStmt.setString(2, description);
-                    pStmt.setInt(3, languageId);
-                    pStmt.executeUpdate();
-                } catch (SQLException ex) {
-                    throw new Exception("Error reading records on table PRODUCTS:" + ex.getMessage(), ex);
-                }
-                break;
-
-            }
-
-            case 'U': {
-                int filmId = Utilities.leerIntLimites("Cual es el Film ID de la pelicula que quieres cambiar?",1, 1000000);
-                String title = Utilities.leerString("Por qué titulo quieres cambiarlo?");
-                String description = Utilities.leerString("Por qué descripcion quieres cambiarlo?");
-                int languageId = Utilities.leerIntLimites("Por qué language ID quieres cambiarlo?",1, 7);
-                PreparedStatement pStmt = null;
-                String query = "UPDATE sakila.film SET title = ?, description = ?, language_id = ? WHERE film_id = ?";
-                try {
-                    pStmt = con.prepareStatement(query);
-                    pStmt.setString(1, title);
-                    pStmt.setString(2, description);
-                    pStmt.setInt(3, languageId);
-                    pStmt.setInt(4, filmId);
-                    pStmt.executeUpdate();
-                } catch (SQLException ex) {
-                    throw new Exception("Error reading records on table PRODUCTS:" + ex.getMessage(), ex);
-                }
-                break;
-            }
->>>>>>> master
-        }
-
-        return false;
-    }
-<<<<<<< HEAD
-=======
-    */
 
 }

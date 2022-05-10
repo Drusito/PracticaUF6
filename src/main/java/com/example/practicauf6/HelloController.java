@@ -55,6 +55,10 @@ public class HelloController {
             MySQLConnectionSettings.database = comboSchema.getValue().toString();
         }
     }
+    @FXML
+    protected void setShowData(){
+        Actions.showData(comboTables.getValue());
+    }
 
     protected void setComboTables() throws Exception {
         for(String s : Actions.tables){
