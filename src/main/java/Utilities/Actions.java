@@ -6,6 +6,7 @@ import java.util.ArrayList;
 
 public final class Actions {
     public static ArrayList<String> databases = new ArrayList<>();
+    public static ArrayList<String> tables = new ArrayList<>();
 
     private static Actions instance;
 
@@ -17,10 +18,9 @@ public final class Actions {
         return instance;
     }
     public static void setConnection(){
-
-        // Construïm la query i la guardem en un String
+        Connection con = null;
+                // Construïm la query i la guardem en un String
 //                String query = "SELECT film_id, title, description FROM sakila.film";
-        String query = "SELECT DISTINCT TABLE_SCHEMA FROM TABLES";
         try {
             Class.forName("com.mysql.jdbc.Driver");
         } catch (ClassNotFoundException e) {
@@ -31,25 +31,83 @@ public final class Actions {
         /*
          * try-catch with resources: Connection
          */
-        try (Connection con = ConnectDB.getInstance();
-             Statement stmt = con.createStatement();
+        try {
+            con = ConnectDB.getInstance();
             //  La classe java.sql.ResultSet ens serveix per a guardar el resultat de l'execució de la sintaxi
-             ResultSet rs = stmt.executeQuery(query))
-        {
-
-            // Per a cada fila guardada dins del ResultSet, agafem les columnes que vulguem per a printar-les
-            while (rs.next()) {
-                databases.add(rs.getString("TABLE_SCHEMA"));
-
-            }
-            for (int i = 0; i < databases.size(); i++) {
-                System.out.println(databases.get(i));
-            }
-        } catch (SQLException ex) {
+            Statement stmt = null;
+            String query = "SELECT DISTINCT TABLE_SCHEMA FROM TABLES";
             try {
-                throw new Exception("Error reading records table FILMS", ex);
+                stmt = con.createStatement();
+                ResultSet rs = stmt.executeQuery(query);
+                while (rs.next()) {
+                    databases.add(rs.getString("TABLE_SCHEMA"));
+
+                }
+                for (int i = 0; i < databases.size(); i++) {
+                    System.out.println(databases.get(i));
+                }
+
+                // Per a cada fila guardada dins del ResultSet, agafem les columnes que vulguem per a printar-les
+
+            } catch (SQLException throwables) {
+                throwables.printStackTrace();
+            }finally {
+                if(stmt!=null)stmt.close();
+            }
+        }catch (SQLException ex) {
+            try {
+                throw new Exception("Error", ex);
             } catch (Exception e) {
                 e.printStackTrace();
+            }
+        } finally {
+            try {
+                if(con != null){
+                    con.close();
+                    ConnectDB.setNull();
+                }
+            } catch (SQLException throwables) {
+                throwables.printStackTrace();
+            }
+
+
+        }
+    }
+
+    public static void setTables (Object schema)
+    {
+        Connection con = null;
+        String query = "SELECT DISTINCT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = '"+schema+"'";
+        try {
+            Class.forName("com.mysql.jdbc.Driver");
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+        try
+        {
+            con = ConnectDB.getInstance();
+            Statement stmt = con.createStatement();
+            //  La classe java.sql.ResultSet ens serveix per a guardar el resultat de l'execució de la sintaxi
+            ResultSet rs = stmt.executeQuery(query);
+            while (rs.next()) {
+            tables.add(rs.getString("TABLE_NAME"));
+        }
+            for (int i = 0; i < tables.size(); i++) {
+                System.out.println(tables.get(i));
+            }
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+
+        } catch (Exception e){
+            e.printStackTrace();
+        } finally {
+            if(con != null){
+                try {
+                    con.close();
+                    ConnectDB.setNull();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
             }
         }
     }
