@@ -79,10 +79,10 @@ public final class Actions {
         }
     }
 
-    public static void setTables (Object schema)
+    public static void setTables (Object table)
     {
         Connection con = null;
-        String query = "SELECT DISTINCT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = '"+schema+"'";
+        String query = "SELECT * FROM " + table;
         try {
             Class.forName("com.mysql.jdbc.Driver");
         } catch (ClassNotFoundException e) {

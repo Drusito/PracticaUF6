@@ -52,7 +52,6 @@ public class HelloController {
     protected void tableSelected(){
         if(comboTables.getValue() != null){
             showData.setDisable(false);
-            MySQLConnectionSettings.database = comboSchema.getValue().toString();
         }
     }
 

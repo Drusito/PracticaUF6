@@ -31,6 +31,7 @@ public final class ConnectDB {
      */
     public static Connection getInstance() throws SQLException {
         if (instance == null) {
+            System.out.println("You are in the databes: '"+MySQLConnectionSettings.database+"'");
             // Usem el mètode getConnection(url, user, passsword) de la classe jdbc.jar.DriverManager
             instance = DriverManager.getConnection(MySQLConnectionSettings.URL
                                                         + MySQLConnectionSettings.database
