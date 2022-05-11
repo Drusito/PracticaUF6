@@ -7,6 +7,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.TableView;
 
 import java.util.ArrayList;
 
@@ -20,6 +21,8 @@ public class HelloController {
     private ComboBox comboSchema = new ComboBox();
     @FXML
     private ComboBox comboTables = new ComboBox();
+    @FXML
+    TableView table = new TableView();
 
     @FXML
     protected void initialize(){
@@ -58,6 +61,7 @@ public class HelloController {
     @FXML
     protected void setShowData(){
         Actions.showData(comboTables.getValue());
+        table.setOpacity(1);
     }
 
     protected void setComboTables() throws Exception {
