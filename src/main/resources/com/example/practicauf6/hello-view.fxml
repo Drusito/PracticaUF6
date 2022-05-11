@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.shape.*?>
+<?import javafx.scene.*?>
 <?import javafx.scene.image.*?>
 <?import javafx.scene.canvas.*?>
 <?import javafx.scene.control.*?>
@@ -22,11 +24,12 @@
                </image></ImageView>
                 
                 <ComboBox fx:id="comboSchema" onAction="#schemaSelected" layoutX="194.0" layoutY="98.0" prefWidth="150.0" promptText="Escull la DB" />
-                <TextArea layoutX="61.0" layoutY="215.0" prefHeight="260.0" prefWidth="879.0" />
                 <ComboBox fx:id="comboTables" onAction="#tableSelected" disable="true" layoutX="405.0" layoutY="98.0" prefWidth="150.0" promptText="Escull la taula" />
                 <Button fx:id="showData" onAction="#setShowData" disable="true" layoutX="611.0" layoutY="98.0" mnemonicParsing="false" text="Show data" />
             <Label layoutX="24.0" layoutY="22.0" text="DBMS Checker" />
-            <Label layoutX="54.0" layoutY="181.0" text="Aquí tens les primeres 5 files de la taula sel·leccionada:" />
+            <Label layoutX="64.0" layoutY="181.0" text="Aquí tens les primeres 5 files de la taula sel·leccionada:" />
+            <Rectangle arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="251.0" layoutX="61.0" layoutY="218.0" stroke="BLACK" strokeType="INSIDE" width="879.0" />
+            <TableView layoutX="61.0" layoutY="214.0" opacity="0.0" prefHeight="260.0" prefWidth="879.0" />
             </children>
         </Pane>
     </children>
