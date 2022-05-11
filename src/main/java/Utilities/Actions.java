@@ -1,11 +1,17 @@
 package Utilities;
 
+import Utilities.ConnectDB;
+
+import java.io.BufferedReader;
 import java.io.IOException;
+
+import java.nio.charset.MalformedInputException;
 import java.sql.*;
 import java.util.ArrayList;
 
 public final class Actions {
     public static ArrayList<String> databases = new ArrayList<>();
+    public static ArrayList<String> tables = new ArrayList<>();
 
     private static Actions instance;
 
@@ -17,10 +23,9 @@ public final class Actions {
         return instance;
     }
     public static void setConnection(){
-
-        // Construïm la query i la guardem en un String
+        Connection con = null;
+                // Construïm la query i la guardem en un String
 //                String query = "SELECT film_id, title, description FROM sakila.film";
-        String query = "SELECT DISTINCT TABLE_SCHEMA FROM TABLES";
         try {
             Class.forName("com.mysql.jdbc.Driver");
         } catch (ClassNotFoundException e) {
@@ -29,140 +34,175 @@ public final class Actions {
         //prueba
         //boolean timeToQuit = false;
         /*
-         * try-catch with resources: Connection
+         * try-catch with resources: BufferedReader i Connection
          */
-        try (Connection con = ConnectDB.getInstance();
-             Statement stmt = con.createStatement();
+
+        try {
+            con = ConnectDB.getInstance();
             //  La classe java.sql.ResultSet ens serveix per a guardar el resultat de l'execució de la sintaxi
-             ResultSet rs = stmt.executeQuery(query))
-        {
-
-            // Per a cada fila guardada dins del ResultSet, agafem les columnes que vulguem per a printar-les
-            while (rs.next()) {
-                databases.add(rs.getString("TABLE_SCHEMA"));
-
-            }
-            for (int i = 0; i < databases.size(); i++) {
-                System.out.println(databases.get(i));
-            }
-        } catch (SQLException ex) {
+            Statement stmt = null;
+            String query = "SELECT DISTINCT TABLE_SCHEMA FROM TABLES";
             try {
-                throw new Exception("Error reading records table FILMS", ex);
+                stmt = con.createStatement();
+                ResultSet rs = stmt.executeQuery(query);
+                while (rs.next()) {
+                    databases.add(rs.getString("TABLE_SCHEMA"));
+
+                }
+/*                for (int i = 0; i < databases.size(); i++) {
+                    System.out.println(databases.get(i));
+                }//shows all tables inside */
+
+                // Per a cada fila guardada dins del ResultSet, agafem les columnes que vulguem per a printar-les
+
+            } catch (SQLException throwables) {
+                throwables.printStackTrace();
+            }finally {
+                if(stmt!=null)stmt.close();
+            }
+        }catch (SQLException ex) {
+            try {
+                throw new Exception("Error", ex);
             } catch (Exception e) {
                 e.printStackTrace();
             }
+        } finally {
+            try {
+                if(con != null){
+                    con.close();
+                    ConnectDB.setNull();
+                }
+            } catch (SQLException throwables) {
+                throwables.printStackTrace();
+            }
+
+
         }
     }
 
-/*    public ArrayList<String> loadSchemas() throws Exception {
-        return databases;
-    }*/
-/*
-    private static boolean executeMenu(Connection con) throws Exception {
-        Character action;
-        int id;
-
-        action = Utilities.leerChar("\n\n [L]ist | [C]ount | [I]nsert | [U]pdate | [Q]uit: ");
-        action = Character.toUpperCase(action);
-        if (action == 'Q') {
-            return true;
+    public static void setTables (Object schema)
+    {
+        Connection con = null;
+        String query = "SELECT DISTINCT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = '"+schema+"'";
+        try {
+            Class.forName("com.mysql.jdbc.Driver");
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
         }
-
-        switch (action) {
-            // Mostrar els detalls de totes les pelis
-            case 'L': {
-                // Construïm la query i la guardem en un String
-                String query = "SELECT film_id, title, description FROM sakila.film";
-
-                // try-catch with resources: Statement i ResultSet
-                try (
-                        // Creem un java.sql.Statement executable (Similar al PREPARE STATEMENT FROM stmt)
-                        Statement stmt = con.createStatement();
-                        // La classe java.sql.ResultSet ens serveix per a guardar el resultat de l'execució de la sintaxi
-                        ResultSet rs = stmt.executeQuery(query)) {
-
-                    // Per a cada fila guardada dins del ResultSet, agafem les columnes que vulguem per a printar-les
-                    while (rs.next()) {
-                        System.out.println(rs.getString("film_id")
-                                + "   " + rs.getString("title")
-                                + "   " + rs.getString("description")
-                        );
-                    }
-                } catch (SQLException ex) {
-                    throw new Exception("Error reading records table FILMS", ex);
-                }
-                break;
+        try
+        {
+            con = ConnectDB.getInstance();
+            Statement stmt = con.createStatement();
+            //  La classe java.sql.ResultSet ens serveix per a guardar el resultat de l'execució de la sintaxi
+            ResultSet rs = stmt.executeQuery(query);
+            while (rs.next()) {
+            tables.add(rs.getString("TABLE_NAME"));
+        }
+            for (int i = 0; i < tables.size(); i++) {
+                System.out.println(tables.get(i));
             }
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
 
-            case 'C': {
-                // TODO: Fer codi que mostri el recompte de pelis de la BD
-                System.out.print("Numero de Peliculas: ");
-                String query = "SELECT COUNT(film_id) FROM sakila.film";
-                try (
-                        Statement stmt = con.createStatement();
-                        ResultSet rs = stmt.executeQuery(query)) {
-                    if (rs.next()) {
-                        System.out.println(rs.getInt(1));
-                    }
-                } catch (SQLException ex) {
-                    throw new Exception("Error reading records table PRODUCT", ex);
-                }
-                break;
-            }
-
-            case 'I': {
-                // TODO: Fer codi que permeti inserir noves pelis
-/*                String title = Utilities.llegirParaula("Cual es el titulo?");
-                String description = Utilities.llegirFrase("Cual es la descripcion de la pelicula");
-                int languageId = Utilities.llegirInt("Cual es el Language ID?",1, 7);
-                String query = "INSERT INTO sakila.film (title, description, language_id) VALUES ( '"+title+"', '"+description+"', "+languageId+") > ?";
-                try (
-                        Statement stmt = con.createStatement()) {
-                        stmt.executeUpdate(query);
-                } catch (SQLException ex) {
-                    throw new Exception("Error reading records on table PRODUCTS:" + ex.getMessage(), ex);
-                }
-                break;
-                String title = Utilities.leerString("Cual es el titulo?");
-                String description = Utilities.leerString("Cual es la descripcion de la pelicula");
-                int languageId = Utilities.leerIntLimites("Cual es el Language ID?",1, 7);
-                PreparedStatement pStmt = null;
-                String query = "INSERT INTO sakila.film (title, description, language_id) VALUES ( ?, ? , ?) ";
+        } catch (Exception e){
+            e.printStackTrace();
+        } finally {
+            if(con != null){
                 try {
-                    pStmt = con.prepareStatement(query);
-                    pStmt.setString(1, title);
-                    pStmt.setString(2, description);
-                    pStmt.setInt(3, languageId);
-                    pStmt.executeUpdate();
-                } catch (SQLException ex) {
-                    throw new Exception("Error reading records on table PRODUCTS:" + ex.getMessage(), ex);
+                    con.close();
+                    ConnectDB.setNull();
+                } catch (SQLException e) {
+                    e.printStackTrace();
                 }
-                break;
-
-            }
-
-            case 'U': {
-                int filmId = Utilities.leerIntLimites("Cual es el Film ID de la pelicula que quieres cambiar?",1, 1000000);
-                String title = Utilities.leerString("Por qué titulo quieres cambiarlo?");
-                String description = Utilities.leerString("Por qué descripcion quieres cambiarlo?");
-                int languageId = Utilities.leerIntLimites("Por qué language ID quieres cambiarlo?",1, 7);
-                PreparedStatement pStmt = null;
-                String query = "UPDATE sakila.film SET title = ?, description = ?, language_id = ? WHERE film_id = ?";
-                try {
-                    pStmt = con.prepareStatement(query);
-                    pStmt.setString(1, title);
-                    pStmt.setString(2, description);
-                    pStmt.setInt(3, languageId);
-                    pStmt.setInt(4, filmId);
-                    pStmt.executeUpdate();
-                } catch (SQLException ex) {
-                    throw new Exception("Error reading records on table PRODUCTS:" + ex.getMessage(), ex);
-                }
-                break;
             }
         }
-        return false;
     }
-    */
+
+    public static void showData (Object table)
+    {
+        Connection con = null;
+        String query = "SELECT * FROM "+table;
+        try {
+            Class.forName("com.mysql.jdbc.Driver");
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+        ResultSetMetaData rsmd = null;
+        try
+        {
+
+            con = ConnectDB.getInstance();
+            Statement stmt = con.createStatement();
+            //  La classe java.sql.ResultSet ens serveix per a guardar el resultat de l'execució de la sintaxi
+            ResultSet rs = stmt.executeQuery(query);
+            rsmd = rs.getMetaData();
+            while(rs.next()) {
+                for (int i = 1; i <= rsmd.getColumnCount(); i++) {
+/*                    System.out.println(i);
+                    System.out.println(rsmd.getColumnName(i));*/
+                        final String columnClass = rsmd.getColumnClassName(i);
+                        final String columnName = rsmd.getColumnName(i);
+                        final String string = "java.lang.String";
+                        final String bigInt = "java.lang.Long";
+                        final String timeStamp = "java.lang.Timestamp";
+//                    System.out.println(columnName);
+                    if(rs.getObject(i)!=null) {
+                        System.out.print(rsmd.getColumnName(i) + ": " + rs.getObject(columnName).toString() + " ");
+                    }
+                    }
+/*                switch (rsmd.getColumnType(i)) {
+                    case 16:
+                        System.out.println(rs.getBoolean(columnName));
+                    case -6:
+                        System.out.println(rs.getInt(columnName));
+                    case -5:
+                        System.out.println(rs.getLong(columnName));
+                    case 12:
+                        System.out.println(rs.getString(columnName));
+                    case 3:
+                        System.out.println(rs.getBigDecimal(columnName));
+                    case 4:
+                        System.out.println(rs.getInt(columnName));
+                    case 5:
+                        System.out.println(rs.getInt(columnName));
+                    case 8:
+                        System.out.println(rs.getDouble(columnName));
+                    case 7:
+                        System.out.println(rs.getFloat(columnName));
+                    case 93:
+                        System.out.println(rs.getTimestamp(columnName));
+                    default:
+                        System.out.println(rs.getObject(columnName));
+                }*/
+                System.out.println();
+            }
+
+/*            while (rs.next()) {
+                tables.add(rs.getString("TABLE_NAME"));
+            }
+            for (int i = 0; i < tables.size(); i++) {
+                System.out.println(tables.get(i));
+            }*/
+        } catch (SQLException throwables) {
+            try {
+                System.out.println(rsmd.getColumnType(1));
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+            throwables.printStackTrace();
+
+        } catch (Exception e){
+            e.printStackTrace();
+        } finally {
+            if(con != null){
+                try {
+                    con.close();
+                    ConnectDB.setNull();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
 
 }

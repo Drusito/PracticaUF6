@@ -1,3 +1,4 @@
+
 package Utilities;
 
 import java.sql.Connection;
@@ -40,6 +41,10 @@ public final class ConnectDB {
             System.out.println("Open Database");
         }
         return instance;
+    }
+
+    public static void setNull(){
+        if(instance!= null) instance=null;
     }
 
     /**

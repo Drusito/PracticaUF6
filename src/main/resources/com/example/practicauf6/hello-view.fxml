@@ -12,6 +12,7 @@
     <children>
         <Pane prefHeight="500.0" prefWidth="1000.0" style="-fx-background-color: #B0E0E6;">
             <children>
+
                 <ImageView fx:id="database_image" fitHeight="81.0" fitWidth="90.0" layoutX="32.0" layoutY="58.0" pickOnBounds="true" preserveRatio="true">
                     <image>
                         <Image url="@../../../images/database_icon.png" />
@@ -22,9 +23,9 @@
                   <Image url="@../../../images/logo_salle_gracia_main.png" />
                </image></ImageView>
                 
-                <ComboBox fx:id="schemas" layoutX="194.0" layoutY="98.0" onAction="#schemaSelected" prefWidth="150.0" promptText="Escull la DB" />
-                <ComboBox fx:id="tables" disable="true" layoutX="405.0" layoutY="98.0" prefWidth="150.0" promptText="Escull la taula" />
-                <Button fx:id="connect" disable="true" layoutX="611.0" layoutY="98.0" mnemonicParsing="false" onAction="#onHelloButtonClick" text="Mostrar dades" />
+                <ComboBox fx:id="comboSchema" onAction="#schemaSelected" layoutX="194.0" layoutY="98.0" prefWidth="150.0" promptText="Escull la DB" />
+                <ComboBox fx:id="comboTables" onAction="#tableSelected" disable="true" layoutX="405.0" layoutY="98.0" prefWidth="150.0" promptText="Escull la taula" />
+                <Button fx:id="showData" onAction="#setShowData" disable="true" layoutX="611.0" layoutY="98.0" mnemonicParsing="false" text="Show data" />
             <Label layoutX="24.0" layoutY="22.0" text="DBMS Checker" />
             <Label layoutX="64.0" layoutY="181.0" text="Aquí tens les primeres 5 files de la taula sel·leccionada:" />
             <Rectangle arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="251.0" layoutX="61.0" layoutY="218.0" stroke="BLACK" strokeType="INSIDE" width="879.0" />
