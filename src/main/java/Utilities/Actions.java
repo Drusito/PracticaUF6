@@ -12,6 +12,8 @@ import java.util.ArrayList;
 public final class Actions {
     public static ArrayList<String> databases = new ArrayList<>();
     public static ArrayList<String> tables = new ArrayList<>();
+    private static ArrayList<String> tablesColumnsName = new ArrayList<>();
+    private static ArrayList<String> tablesColumnsData = new ArrayList<>();
 
     private static Actions instance;
 
@@ -62,8 +64,6 @@ public final class Actions {
             } catch (SQLException throwables) {
                 throwables.printStackTrace();
             }
-
-
         }
     }
 
@@ -122,12 +122,18 @@ public final class Actions {
             ResultSet rs = stmt.executeQuery(query);
             rsmd = rs.getMetaData();
             while(rs.next()) {
+                int counter = 0;
                 for (int i = 1; i <= rsmd.getColumnCount(); i++) {
                         final String columnName = rsmd.getColumnName(i);
                     if(rs.getObject(i)!=null) {
-                        System.out.print(rsmd.getColumnName(i) + ": " + rs.getObject(columnName).toString() + " ");
+                        //System.out.print(rsmd.getColumnName(i) + ": " + rs.getObject(columnName).toString() + " ");
+                        if(tablesColumnsName.size() < rsmd.getColumnCount()){
+                            tablesColumnsName.add(rsmd.getColumnName(i));
+                        }
+                        tablesColumnsData.add(rs.getObject(columnName).toString());
                     }
                 }
+                if(counter!=1) counter++;
                 System.out.println();
             }
         } catch (SQLException throwables) {
@@ -152,4 +158,11 @@ public final class Actions {
         }
     }
 
+    public static ArrayList<String> getTablesColumnsName(){
+        return tablesColumnsName;
+    }
+
+    public static ArrayList<String> getTablesColumnsData(){
+        return tablesColumnsData;
+    }
 }
