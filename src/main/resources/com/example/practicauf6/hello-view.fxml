@@ -29,7 +29,7 @@
             <Label layoutX="24.0" layoutY="22.0" text="DBMS Checker" />
             <Label layoutX="64.0" layoutY="181.0" text="Aquí tens les primeres 5 files de la taula sel·leccionada:" />
             <Rectangle arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="251.0" layoutX="61.0" layoutY="218.0" stroke="BLACK" strokeType="INSIDE" width="879.0" />
-            <TableView layoutX="61.0" layoutY="214.0" opacity="0.0" prefHeight="260.0" prefWidth="879.0" />
+            <TableView fx:id="table" layoutX="61.0" layoutY="214.0" opacity="0.0" prefHeight="260.0" prefWidth="879.0" />
             </children>
         </Pane>
     </children>
