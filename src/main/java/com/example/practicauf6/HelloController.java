@@ -4,11 +4,10 @@ import Utilities.Actions;
 import Utilities.MySQLConnectionSettings;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.Label;
-import javafx.scene.control.TableView;
+import javafx.scene.control.*;
+import javafx.scene.control.skin.TableColumnHeader;
 
+import java.sql.SQLOutput;
 import java.util.ArrayList;
 
 public class HelloController {
@@ -33,7 +32,7 @@ public class HelloController {
             e.printStackTrace();
         }
     }
-    protected void setComboSchemas() throws Exception {
+    private void setComboSchemas() throws Exception {
         for(String s : Actions.databases){
             comboSchema.getItems().add(s);
         }
@@ -61,14 +60,17 @@ public class HelloController {
     @FXML
     protected void setShowData(){
         Actions.showData(comboTables.getValue());
+        for (int i = 0; i < Actions.getTablesColumnsName().size(); i++) {
+            TableColumn tc = new TableColumn(Actions.getTablesColumnsName().get(i));
+            table.getColumns().add(tc);
+        }
         table.setOpacity(1);
     }
 
-    protected void setComboTables() throws Exception {
+    private void setComboTables() throws Exception {
         for(String s : Actions.tables){
             comboTables.getItems().add(s);
         }
         tableSelected();
     }
-
 }
