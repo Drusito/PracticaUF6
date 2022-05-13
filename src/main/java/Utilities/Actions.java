@@ -78,6 +78,7 @@ public final class Actions {
         }
         try
         {
+            tables.clear();
             con = ConnectDB.getInstance();
             Statement stmt = con.createStatement();
             //  La classe java.sql.ResultSet ens serveix per a guardar el resultat de l'execució de la sintaxi
@@ -88,11 +89,9 @@ public final class Actions {
             for (int i = 0; i < tables.size(); i++) {
                 System.out.println(tables.get(i));
             }
-        } catch (SQLException throwables) {
+        } catch (Exception throwables) {
             throwables.printStackTrace();
 
-        } catch (Exception e){
-            e.printStackTrace();
         } finally {
             if(con != null){
                 try {
