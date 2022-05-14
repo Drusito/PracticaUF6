@@ -10,6 +10,7 @@ import javafx.geometry.HPos;
 import javafx.scene.control.*;
 import javafx.scene.control.skin.TableColumnHeader;
 import javafx.scene.layout.*;
+import javafx.scene.text.Font;
 
 import java.sql.SQLOutput;
 import java.util.ArrayList;
@@ -55,7 +56,7 @@ public class HelloController {
     protected void tableSelected(){
         if(comboTables.getValue() != null){
             showData.setDisable(false);
-            MySQLConnectionSettings.database = comboSchema.getValue().toString();
+            MySQLConnectionSettings.setDatabase(comboSchema.getValue().toString());
         }
     }
     @FXML
@@ -67,7 +68,6 @@ public class HelloController {
         double porcentAncho = (double)100 / (double)Actions.getTablesColumnsName().size();
         double porcentAlto = (double)251 / (double)6;
         GridPane gp = new GridPane();
-        gp.setGridLinesVisible(false);
         for (int i = 0; i < Actions.getTablesColumnsName().size(); i++) {
             RowConstraints row = new RowConstraints();
             row.setMinHeight(porcentAlto);
@@ -76,7 +76,9 @@ public class HelloController {
             col.setPercentWidth(porcentAncho);
             col.setHalignment(HPos.CENTER);
             gp.getColumnConstraints().add(col);
-            gp.add(new Label(Actions.getTablesColumnsName().get(i)), i, 0);
+            Label labelTitle = new Label(Actions.getTablesColumnsName().get(i));
+            labelTitle.setFont(new Font("Arial", 15));
+            gp.add(labelTitle, i, 0);
         }
         int contador = 0;
         for (int i = 1; i < 6; i++) {
@@ -84,7 +86,12 @@ public class HelloController {
             row.setMinHeight(porcentAlto);
             gp.getRowConstraints().add(row);
             for (int j = 0; j < Actions.getTablesColumnsName().size(); j++) {
-                gp.add(new Label(Actions.getTablesColumnsData().get(contador)), j, i);
+                try{
+                    gp.add(new Label(Actions.getTablesColumnsData().get(contador)), j, i);
+                }catch(Exception e){
+                    System.out.println("NO HAY SUFICIENTES FILAS");
+                    break;
+                }
                 contador++;
             }
         }

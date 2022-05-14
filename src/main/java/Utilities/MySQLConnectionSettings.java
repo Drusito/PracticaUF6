@@ -7,7 +7,7 @@ public final class MySQLConnectionSettings {
     public static final String URL = "jdbc:mysql://localhost:3306/";
 
     //    public static String database = "mysql";
-          public static String database = "INFORMATION_SCHEMA";
+    public static String database = "INFORMATION_SCHEMA";
     public static final String CHARACTER_SET = "latin1";
 
     public static final String USERNAME = "root";

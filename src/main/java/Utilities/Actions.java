@@ -120,6 +120,8 @@ public final class Actions {
             Statement stmt = con.createStatement();
             ResultSet rs = stmt.executeQuery(query);
             rsmd = rs.getMetaData();
+            Actions.tablesColumnsName.clear();
+            Actions.tablesColumnsData.clear();
             while(rs.next()) {
                 int counter = 0;
                 for (int i = 1; i <= rsmd.getColumnCount(); i++) {
