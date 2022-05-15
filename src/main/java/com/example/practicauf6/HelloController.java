@@ -34,11 +34,20 @@ public class HelloController {
             e.printStackTrace();
         }
     }
+    /**
+     * Método para rellenar el primer ComboBox con el nombre de las bases de datos
+     * @return
+     */
     private void setComboSchemas() throws Exception {
         for(String s : Actions.databases){
             comboSchema.getItems().add(s);
         }
     }
+    /**
+     * Método para comprobar que el primer desplegable haya sido rellenado, si no es así el segundo
+     * no estará habilitado
+     * @return
+     */
     @FXML
     protected void schemaSelected() {
         if(comboSchema.getValue() != null) {
@@ -52,6 +61,12 @@ public class HelloController {
 
         }
     }
+
+    /**
+     * Método para comprobar que el segundo desplegable haya sido rellenado, si no es así el botón
+     * para obtener las filas no será habilitado
+     * @return
+     */
     @FXML
     protected void tableSelected(){
         if(comboTables.getValue() != null){
@@ -59,6 +74,12 @@ public class HelloController {
             MySQLConnectionSettings.setDatabase(comboSchema.getValue().toString());
         }
     }
+
+    /**
+     * Método para crear la tabla que aparecerá con la información de la base de datos seleccionada y rellenarla
+     * con las cinco primeras filas.
+     * @return
+     */
     @FXML
     protected void setShowData() {
         if (background.getChildren().size() > 0) {
@@ -98,6 +119,12 @@ public class HelloController {
         background.getChildren().add(gp);
         showData.setDisable(true);
     }
+
+    /**
+     * Método para rellenar el segundo ComboBox con el nombre de las tablas contenidas en la base de datos
+     * seleccionada
+     * @return
+     */
 
     private void setComboTables() throws Exception {
         comboTables.getItems().clear();

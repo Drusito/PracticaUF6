@@ -24,6 +24,12 @@ public final class Actions {
         }
         return instance;
     }
+
+    /**
+     * Este método sirve para establecer la conexión a MySQL y obtener el nombre de las diferentes bases
+     * de datos que tengamos en ella.
+     * @return
+     */
     public static void setConnection(){
         Connection con = null;
                 // Construïm la query i la guardem en un String
@@ -67,6 +73,12 @@ public final class Actions {
         }
     }
 
+    /**
+     * Este método sirve para obtener las tablas que forman parte de la base de datos seleccionada previamente
+     * @param schema objeto con el nombre de la base de datos seleccionada en el primer desplegable de la interfaz
+     * @return
+     */
+
     public static void setTables (Object schema)
     {
         Connection con = null;
@@ -103,6 +115,12 @@ public final class Actions {
             }
         }
     }
+
+    /**
+     * Este método sirve para obtener las filas de la tabla seleccionada en el segundo desplegable de la interfaz
+     * @param table objeto con el nombre de la tabla seleccionada
+     * @return
+     */
 
     public static void showData (Object table)
     {
@@ -158,10 +176,19 @@ public final class Actions {
             }
         }
     }
+    /**
+     * Método para obtener el nombre de las columnas de la tabla seleccionada
+     * @return un array con los nombres
+     */
 
     public static ArrayList<String> getTablesColumnsName(){
         return tablesColumnsName;
     }
+
+    /**
+     * Método para obtener las filas de la tabla seleccionada
+     * @return un array con los datos
+     */
 
     public static ArrayList<String> getTablesColumnsData(){
         return tablesColumnsData;
